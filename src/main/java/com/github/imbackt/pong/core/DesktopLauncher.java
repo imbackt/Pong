@@ -1,4 +1,4 @@
-package com.github.imbackt.pong;
+package com.github.imbackt.pong.core;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
