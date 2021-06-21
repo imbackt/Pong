@@ -9,36 +9,43 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.github.imbackt.pong.helper.Const;
 import com.github.imbackt.pong.objects.Ball;
 import com.github.imbackt.pong.objects.Player;
+import com.github.imbackt.pong.objects.Wall;
 import org.lwjgl.opengl.GL20;
 
 public class GameScreen extends ScreenAdapter {
     private final OrthographicCamera camera;
     private final SpriteBatch batch;
     private final World world;
-    private Box2DDebugRenderer box2DDebugRenderer;
+    private final Box2DDebugRenderer box2DDebugRenderer;
 
     private final Player player;
-    private Ball ball;
+    private final Ball ball;
+    private Wall topWall, bottomWall;
 
     public GameScreen(OrthographicCamera camera) {
         this.camera = camera;
-        this.camera.position.set(new Vector3(Boot.INSTANCE.getScreenWidth() / 2f, Boot.INSTANCE.getScreenHeight() / 2f, 0));
-        this.batch = new SpriteBatch();
-        this.world = new World(new Vector2(0, 0), false);
-        this.box2DDebugRenderer = new Box2DDebugRenderer();
+        camera.position.set(new Vector3(Boot.INSTANCE.getScreenWidth() / 2f, Boot.INSTANCE.getScreenHeight() / 2f, 0));
+        batch = new SpriteBatch();
+        world = new World(new Vector2(0, 0), false);
+        box2DDebugRenderer = new Box2DDebugRenderer();
 
-        this.player = new Player(16, Boot.INSTANCE.getScreenHeight() / 2f, this);
-        this.ball = new Ball(this);
+        player = new Player(16, Boot.INSTANCE.getScreenHeight() / 2f, this);
+        ball = new Ball(this);
+        topWall = new Wall(32, this);
+        bottomWall = new Wall(Boot.INSTANCE.getScreenHeight() - 32, this);
     }
 
     public void update() {
         world.step(1 / 60f, 6, 2);
-        batch.setProjectionMatrix(camera.combined);
 
+        camera.update();
         player.update();
         ball.update();
+
+        batch.setProjectionMatrix(camera.combined);
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
@@ -58,7 +65,11 @@ public class GameScreen extends ScreenAdapter {
         batch.begin();
         player.render(batch);
         ball.render(batch);
+        topWall.render(batch);
+        bottomWall.render(batch);
         batch.end();
+
+        box2DDebugRenderer.render(world, camera.combined.scl(Const.PPM));
     }
 
     public World getWorld() {
