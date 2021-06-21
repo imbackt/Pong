@@ -20,11 +20,11 @@ abstract public class PlayerPaddle {
         this.x = x;
         this.y = y;
         this.gameScreen = gameScreen;
-        this.speed = 6;
-        this.width = 16;
-        this.height = 64;
-        this.texture = new Texture("white.png");
-        this.body = BodyHelper.createBody(x, y, width, height, false, 10000, gameScreen.getWorld(), ContactType.PLAYER);
+        speed = 6;
+        width = 16;
+        height = 64;
+        texture = new Texture("white.png");
+        body = BodyHelper.createBody(x, y, width, height, false, 10000, gameScreen.getWorld(), ContactType.PLAYER);
     }
 
     public void update() {
